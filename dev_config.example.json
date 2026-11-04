@@ -1,0 +1,14 @@
+{
+  "API_URL": "",
+  "apiKey": "",
+  "authDomain": "",
+  "projectId": "",
+  "storageBucket": "",
+  "messagingSenderId": "",
+  "appId": "",
+  "databaseURL": "",
+  "iosClientId": "",
+  "iosBundleId": "",
+  "ENVIRONMENT": "development",
+  "DEFAULT_HOST": ""
+}
