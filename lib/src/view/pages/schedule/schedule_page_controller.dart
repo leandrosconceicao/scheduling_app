@@ -30,6 +30,8 @@ final class SchedulePageController extends GetxController with AlertActions {
 
   final employees = <Employee>[].obs;
 
+  final scheduleTypes = <ScheduleType>[].obs;
+
   final selectedSchedule = Rxn<Schedule>();  
 
   final scheduleFormKey = GlobalKey<FormState>();
@@ -82,7 +84,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   int? get lockPeriodInMinutes =>
       companyData.value?.configuration.lockSchedulePeriodInMinutes;
 
-  List<ScheduleType> get types => companyData.value?.scheduleTypes ?? [];
+  List<ScheduleType> get types => scheduleTypes;
 
   Client? get clientData => !isLogged
       ? null
@@ -100,7 +102,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   void onInit() {
     super.onInit();
     createCalendar();
-    Future.wait([loadCompanyData(), loadSchedules(true), loadEmployees(),]);
+    Future.wait([loadCompanyData(), loadTypes(), loadEmployees(),]);
     initListener();
     listenCurrentSchedules();
   }
@@ -172,6 +174,14 @@ final class SchedulePageController extends GetxController with AlertActions {
     final res = await service.getEmployees(companyId);
 
     employees.addAll(res.data ?? []);
+  }
+
+  Future<void> loadTypes() async {
+    scheduleTypes.clear();
+
+    final res = await service.getScheduleTypes(companyId);
+
+    scheduleTypes.addAll(res.data ?? []);
   }
 
   Future<void> loadSchedules([bool clear = false]) async {
