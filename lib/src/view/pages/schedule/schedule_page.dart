@@ -44,7 +44,7 @@ class _SchedulePageState extends State<SchedulePage> {
       child: Scaffold(
         key: controller.scaffoldKey,
         backgroundColor: Colors.black,
-        drawer: ScheduleDrawer(),
+        drawer: ScheduleDrawer(controller: controller),
         appBar: AppBar(
           backgroundColor: Colors.black,
           actions: [

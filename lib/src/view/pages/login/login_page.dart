@@ -42,6 +42,7 @@ class LoginPage extends GetView<LoginPageController> with FormValidators {
                   children: [
                     Text("Email"),
                     TextFormField(
+                      autofocus: true,
                       controller: controller.email,
                       validator: notAllowedEmptyText,
                       keyboardType: .emailAddress,
