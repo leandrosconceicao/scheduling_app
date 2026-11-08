@@ -34,7 +34,7 @@ class LoginPage extends GetView<LoginPageController> with FormValidators {
               mainAxisAlignment: .center,
               spacing: 24.0,
               children: [
-                FlutterLogo(size: 64),
+                Image.asset("images/app_logo-dourado.png", height: 150,),
                 Text("Faça o seu login", style: Theme.of(context).textTheme.titleLarge),
                 Column(
                   crossAxisAlignment: .start,

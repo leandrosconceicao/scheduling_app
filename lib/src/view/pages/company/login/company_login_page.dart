@@ -34,7 +34,7 @@ class CompanyLoginPage extends GetView<CompanyLoginController>
               mainAxisAlignment: .center,
               spacing: 24.0,
               children: [
-                FlutterLogo(size: 64),
+                Image.asset("images/app_logo-dourado.png", height: 150,),
                 Text("Acesso da empresa", style: Theme.of(context).textTheme.titleLarge),
                 Obx(
                   () => TextFormField(
