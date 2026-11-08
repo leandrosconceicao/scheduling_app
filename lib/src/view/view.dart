@@ -13,6 +13,8 @@ export "pages/signup/signup_page.dart";
 export "pages/schedule/schedule_page.dart";
 export "pages/schedule/schedule_form.dart";
 export "pages/schedule/schedule_page_controller.dart";
+export "pages/schedule/my_schedules_controller.dart";
+export "pages/schedule/my_schedules_page.dart";
 export "pages/company/configuration/company_configuration_page.dart";
 export "pages/company/configuration/company_configuration_services.dart";
 export "pages/company/configuration/company_configuration_controller.dart";

@@ -15,6 +15,7 @@ export "entities/schedule_lock_expiration.dart";
 export "extensoes/extensoes.dart";
 export "enums/schedule_state.dart";
 export "enums/severity.dart";
+export "enums/schedule_period.dart";
 export "mixins/validators.dart";
 export "mixins/alert_actions.dart";
 export "utils/runner.dart";

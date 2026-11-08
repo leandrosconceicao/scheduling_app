@@ -75,7 +75,12 @@ class _ScheduleDrawerState extends State<ScheduleDrawer> {
                   Visibility(
                     visible: controller.isLogged,
                     child: ListTile(
-                      onTap: () {},
+                      leading: Icon(MdiIcons.calendarCheckOutline),
+                      onTap: () {
+                        final router = GoRouter.of(context);
+                        Navigator.of(context).pop();
+                        router.pushMySchedules(controller.companyId);
+                      },
                       title: Text("Meus agendamentos"),
                     ),
                   ),

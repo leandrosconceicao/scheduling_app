@@ -88,6 +88,30 @@ final class CompanyConfigService implements ICompanyService {
   }
 
   @override
+  Future<ApiResponse<List<Schedule>?>> getClientSchedules({
+    String? companyId,
+    SchedulePeriod period = SchedulePeriod.upcoming,
+    bool includeCanceled = false,
+    int page = 1,
+    int limit = 20,
+  }) {
+    final query = Uri(
+      queryParameters: {
+        "period": period.code,
+        "includeCanceled": "$includeCanceled",
+        "page": "$page",
+        "limit": "$limit",
+      },
+    ).query;
+    final base = companyId == null ? "$_endpoint/me" : "$_endpoint/$companyId/me";
+
+    return _client.get(
+      endpoint: "$base?$query",
+      parser: (json) => Schedule.toList(json),
+    );
+  }
+
+  @override
   Future<ApiResponse<dynamic>> removeScheduleType(
     String companyId,
     String typeId,

@@ -6,6 +6,7 @@ abstract final class AppRoutes {
   static const splash = "splash";
   static const schedule = "schedule";
   static const scheduleForm = "schedule-form";
+  static const mySchedules = "my-schedules";
   static const login = "login";
   static const signup = "signup";
   static const adminLogin = "admin-login";
@@ -19,6 +20,10 @@ extension AppNavigation on GoRouter {
 
   void goSchedule(String companyId) {
     goNamed(AppRoutes.schedule, pathParameters: _company(companyId));
+  }
+
+  Future<void> pushMySchedules(String companyId) {
+    return pushNamed(AppRoutes.mySchedules, pathParameters: _company(companyId));
   }
 
   Future<void> pushScheduleForm(String companyId) {

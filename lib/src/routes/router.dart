@@ -65,6 +65,17 @@ class AppRouter {
               pageBuilder: (_, state) => appPage(state, const ScheduleForm()),
             ),
             GoRoute(
+              path: "meus-agendamentos",
+              name: AppRoutes.mySchedules,
+              pageBuilder: (_, state) => appPage(
+                state,
+                ControllerScope(
+                  create: () => MySchedulesController(_companyId(state)),
+                  child: const MySchedulesPage(),
+                ),
+              ),
+            ),
+            GoRoute(
               path: "login",
               name: AppRoutes.login,
               pageBuilder: (_, state) => appPage(

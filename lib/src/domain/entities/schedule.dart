@@ -18,6 +18,12 @@ final class Schedule {
   String employeeId;
   Employee? employee;
 
+  /// Empresa do agendamento (consulta do cliente em todas as empresas).
+  ScheduleCompany? companyDetail;
+
+  /// Preenchido quando o agendamento foi cancelado.
+  ScheduleCancellation? cancellation;
+
 
   Schedule({
     required this.startsAt,
@@ -44,6 +50,12 @@ final class Schedule {
       typeDetail = json['typeDetail'] == null ? null : ScheduleType.fromJson(json['typeDetail']),
       employeeId = json['employeeId'] ?? "",
       employee = json['employeeDetail'] == null ? null : Employee.fromJson(json['employeeDetail']),
+      companyDetail = json['companyDetail'] is Map<String, dynamic>
+          ? ScheduleCompany.fromJson(json['companyDetail'])
+          : null,
+      cancellation = json['cancellation'] is Map<String, dynamic>
+          ? ScheduleCancellation.fromJson(json['cancellation'])
+          : null,
       id = json["_id"] ?? "";
 
   Map<String, dynamic> toJson() {
@@ -80,6 +92,7 @@ final class Schedule {
   bool get isScheduled => state == .scheduled;
   bool get isClosed => state == .closed;
   bool get isLocked => state == .lock;
+  bool get isCanceled => cancellation != null;
 
   Duration get duration => endsAt.difference(startsAt);
 
@@ -102,4 +115,48 @@ final class Schedule {
   @override String toString() {
     return jsonEncode(this);
   }
+}
+
+/// Dados da empresa que acompanham o agendamento do cliente.
+final class ScheduleCompany {
+  final String name;
+  final String logoUrl;
+  final String subdomain;
+
+  const ScheduleCompany({
+    required this.name,
+    required this.logoUrl,
+    required this.subdomain,
+  });
+
+  ScheduleCompany.fromJson(Map<String, dynamic> json)
+    : name = json['name'] ?? '',
+      logoUrl = json['logoUrl'] ?? '',
+      subdomain = json['subdomain'] ?? '';
+}
+
+enum CancellationOrigin {
+  client,
+  company;
+
+  static CancellationOrigin? parse(Object? code) {
+    for (final origin in values) {
+      if (origin.name == code) return origin;
+    }
+    return null;
+  }
+}
+
+/// Registro do cancelamento: quem cancelou, quando e (se a empresa) o motivo.
+final class ScheduleCancellation {
+  final CancellationOrigin? canceledBy;
+  final DateTime? canceledAt;
+  final String reason;
+
+  const ScheduleCancellation({this.canceledBy, this.canceledAt, this.reason = ''});
+
+  ScheduleCancellation.fromJson(Map<String, dynamic> json)
+    : canceledBy = CancellationOrigin.parse(json['canceledBy']),
+      canceledAt = DateTime.tryParse(json['canceledAt'] ?? '')?.toLocal(),
+      reason = json['reason'] ?? '';
 }

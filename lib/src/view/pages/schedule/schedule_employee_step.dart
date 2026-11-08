@@ -58,18 +58,7 @@ class ScheduleEmployeeStep extends GetView<SchedulePageController> {
                                   activeColor: golden,
                                   radioScaleFactor: 1.2,
                                   contentPadding: const .all(16.0),
-                                  secondary: CircleAvatar(
-                                    backgroundColor: golden,
-                                    child: CachedNetworkImage(
-                                    imageUrl: employee.profilePhotoUrl,
-                                      errorWidget: (_, _, _) => CircleAvatar(
-                                            backgroundColor: golden,
-                                            child: Icon(
-                                              MdiIcons.accountOutline,
-                                            ),
-                                          ),
-                                    ),
-                                  ),
+                                  secondary: EmployeeAvatar(name: employee.name, photoUrl: employee.profilePhotoUrl,),
                                   subtitle: Row(
                                     spacing: 4.0,
                                     children: [

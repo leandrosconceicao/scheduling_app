@@ -31,6 +31,16 @@ abstract interface class ICompanyService {
     DateTime? startsAt,
   });
 
+  /// Agendamentos confirmados do cliente autenticado. Sem [companyId], traz os
+  /// de todas as empresas (cada item com `companyDetail`).
+  Future<ApiResponse<List<Schedule>?>> getClientSchedules({
+    String? companyId,
+    SchedulePeriod period = SchedulePeriod.upcoming,
+    bool includeCanceled = false,
+    int page = 1,
+    int limit = 20,
+  });
+
   Future<ApiResponse<Schedule?>> createSchedule(
     String companyId,
     Schedule schedules,
