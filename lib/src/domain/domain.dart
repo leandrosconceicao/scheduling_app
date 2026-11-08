@@ -1,5 +1,6 @@
 export "interfaces/i_local_repository.dart";
 export "interfaces/i_company_service.dart";
+export "interfaces/i_form_upload_client.dart";
 export "interfaces/i_auth_service.dart";
 export "interfaces//i_cloud_service.dart";
 export "interfaces/i_owner_session_service.dart";

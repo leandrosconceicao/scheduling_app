@@ -20,7 +20,7 @@ class CompanyConfigurationPage extends GetView<CompanyConfigurationController> {
         final res = controller.companyData.value!;
 
         if (!res.result) {
-          return Center(child: Text(res.description),);
+          return Center(child: Text(res.description));
         }
 
         return CustomScrollView(
@@ -35,6 +35,15 @@ class CompanyConfigurationPage extends GetView<CompanyConfigurationController> {
                   onTap: () => GoRouter.of(
                     context,
                   ).goAdminConfigServices(controller.companyId),
+                ),
+                ListTile(
+                  leading: Icon(MdiIcons.accountGroupOutline),
+                  title: Text("Barbeiros"),
+                  subtitle: Text("Cadastre e edite a equipe"),
+                  trailing: Icon(MdiIcons.chevronRight),
+                  onTap: () => GoRouter.of(
+                    context,
+                  ).goAdminConfigEmployees(controller.companyId),
                 ),
               ],
             ),

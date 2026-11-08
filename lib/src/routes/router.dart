@@ -133,6 +133,19 @@ class AppRouter {
                     ),
                   ),
                 ),
+                GoRoute(
+                  path: "barbeiros",
+                  name: AppRoutes.adminConfigEmployees,
+                  redirect: ownerGuard.requireOwner,
+                  pageBuilder: (_, state) => appPage(
+                    state,
+                    ControllerScope(
+                      create: () =>
+                          CompanyEmployeesController(_companyId(state)),
+                      child: const CompanyConfigurationEmployees(),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],

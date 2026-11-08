@@ -32,7 +32,7 @@ final class SchedulePageController extends GetxController with AlertActions {
 
   final scheduleTypes = <ScheduleType>[].obs;
 
-  final selectedSchedule = Rxn<Schedule>();  
+  final selectedSchedule = Rxn<Schedule>();
 
   final scheduleFormKey = GlobalKey<FormState>();
 
@@ -65,7 +65,8 @@ final class SchedulePageController extends GetxController with AlertActions {
   bool get employeeSelected => selectedEmployee.value != null;
   bool get scheduleSelected => selectedSchedule.value != null;
 
-  bool get confirmationStepEnabled => typeSelected && employeeSelected && scheduleSelected;
+  bool get confirmationStepEnabled =>
+      typeSelected && employeeSelected && scheduleSelected;
 
   bool get isServiceStep => activeStep.value == 0;
   bool get isEmployeeStep => activeStep.value >= 1;
@@ -77,7 +78,6 @@ final class SchedulePageController extends GetxController with AlertActions {
   String get userName => authService.userName;
   String get userEmail => authService.userEmail;
   String get userProfilePhoto => authService.profilePhotoImage;
-
 
   bool get isLogged => authService.isLoggedIn && !authService.isAnonymous;
 
@@ -102,7 +102,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   void onInit() {
     super.onInit();
     createCalendar();
-    Future.wait([loadCompanyData(), loadTypes(), loadEmployees(),]);
+    Future.wait([loadCompanyData(), loadTypes(), loadEmployees()]);
     initListener();
     listenCurrentSchedules();
   }
@@ -118,7 +118,7 @@ final class SchedulePageController extends GetxController with AlertActions {
     runner ??= Runner(
       frequency: const Duration(seconds: 30),
       callback: () async {
-        final now = DateTime.now();        
+        final now = DateTime.now();
 
         if (schedules.first.startsAt.isBefore(now)) {
           loadSchedules(true);
@@ -168,7 +168,6 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   Future<void> loadEmployees() async {
-    
     employees.clear();
 
     final res = await service.getEmployees(companyId);
@@ -258,14 +257,16 @@ final class SchedulePageController extends GetxController with AlertActions {
     processing.toggle();
 
     if (response.statusCode == 401) {
-      AppAlertDialog.show(body: "Sessão expirada, faça seu login e tente novamente").then((_) {
+      AppAlertDialog.show(
+        body: "Sessão expirada, faça seu login e tente novamente",
+      ).then((_) {
         navigateToLogin();
       });
       return (isSuccess: false, result: null);
     }
 
     if (!response.result) {
-      AppAlertDialog.show(body:  response.description);
+      AppAlertDialog.show(body: response.description);
       return (isSuccess: false, result: null);
     }
     return (isSuccess: true, result: response.data);
@@ -285,7 +286,7 @@ final class SchedulePageController extends GetxController with AlertActions {
 
   void selectType(ScheduleType? type) {
     selectedType.trigger(type);
-  }  
+  }
 
   void openDrawer() {
     scaffoldKey.currentState?.openDrawer();
@@ -294,9 +295,8 @@ final class SchedulePageController extends GetxController with AlertActions {
   void closeDrawer() {
     scaffoldKey.currentState?.closeDrawer();
   }
-  
 
-  void onNextStep() {    
+  void onNextStep() {
     if (!scheduleFormKey.currentState!.validate()) {
       return;
     }
@@ -316,12 +316,11 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   void navigateToConfirm() async {
-
     if (!isLogged) {
       navigateToLogin();
       return;
     }
-    
+
     final res = await lockSchedule(_selectedSchedule!);
 
     if (!res.isSuccess) {
@@ -344,7 +343,11 @@ final class SchedulePageController extends GetxController with AlertActions {
   void _changePage(int page) {
     activeStep.value = page;
     if (!pageController.hasClients) return;
-    pageController.animateToPage(page, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+    pageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeIn,
+    );
   }
 
   void goBack() {
@@ -377,7 +380,6 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   void confirmSchedule() async {
-
     if (_selectedSchedule == null) {
       showErrorAlert("Dados selecionados são inválidos");
       return;
@@ -397,37 +399,37 @@ final class SchedulePageController extends GetxController with AlertActions {
     if (!res.result) {
       showErrorAlert(res.description);
       return;
-    }    
+    }
 
     clearForm();
-    
+
     await showSuccessAlert("Agendamento confirmado com sucesso");
 
     navigation.toSchedule(companyId);
-    
   }
+
   Schedule? get _selectedSchedule {
     if (!confirmationStepEnabled) {
       return null;
     }
 
     return Schedule(
-      startsAt: selectedSchedule.value!.startsAt, 
-      endsAt: selectedSchedule.value!.endsAt, 
-      companyId: companyId, 
-      client: clientData, 
-      typeId: selectedType.value!.id!, 
-      employeeId: selectedEmployee.value!.id
+      startsAt: selectedSchedule.value!.startsAt,
+      endsAt: selectedSchedule.value!.endsAt,
+      companyId: companyId,
+      client: clientData,
+      typeId: selectedType.value!.id!,
+      employeeId: selectedEmployee.value!.id,
     );
   }
 
   void cancelConfirm() async {
     processing.toggle();
-    
+
     await service.removeLockSchedule(companyId, selectedSchedule.value!);
 
     processing.toggle();
-    
+
     goBack();
   }
 }

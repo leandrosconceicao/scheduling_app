@@ -8,7 +8,7 @@ import 'package:ltech_core/ltech_core.dart'
 
 import '../domain/domain.dart';
 
-final class HttpClient implements IHttpClient {
+final class HttpClient implements IHttpClient, IFormUploadClient {
   Dio _client;
 
   HttpClient._(this._client);
@@ -34,7 +34,8 @@ final class HttpClient implements IHttpClient {
           final auth = repository.read<String>("access_token") ?? "";
 
           // Um token passado na requisição (ex.: rotas do dono) tem prioridade.
-          if (auth.hasContent && !options.headers.containsKey('authorization')) {
+          if (auth.hasContent &&
+              !options.headers.containsKey('authorization')) {
             options.headers['authorization'] = "Bearer $auth";
           }
           handler.next(options);
@@ -86,7 +87,9 @@ final class HttpClient implements IHttpClient {
 
     if (data is Map<String, dynamic>) return ApiResponse.fromJson(data, status);
 
-    return status == 401 ? ApiResponse.unauthorizedAccess() : ApiResponse.unknow();
+    return status == 401
+        ? ApiResponse.unauthorizedAccess()
+        : ApiResponse.unknow();
   }
 
   @override
@@ -254,6 +257,40 @@ final class HttpClient implements IHttpClient {
         onSendProgress: onSendProgress,
       );
       return _responseParser(response, parser);
+    } catch (e) {
+      log(e.toString());
+      return ApiResponse.unknow(errorDescription: e.toString());
+    }
+  }
+
+  @override
+  Future<ApiResponse<T?>> putForm<T>({
+    required String endpoint,
+    required Uint8List bytes,
+    required String filename,
+    required String contentType,
+    Map<String, String>? headers,
+    Duration? timeout,
+    T Function(dynamic p1)? parser,
+    void Function(int, int)? onSendProgress,
+  }) async {
+    try {
+      // Sem o tipo, o Dio envia application/octet-stream e a API recusa.
+      final file = MultipartFile.fromBytes(
+        bytes,
+        filename: filename,
+        contentType: DioMediaType.parse(contentType),
+      );
+
+      final response = await _client.put(
+        endpoint,
+        options: Options(headers: headers, receiveTimeout: timeout),
+        data: FormData.fromMap({"file": file}),
+        onSendProgress: onSendProgress,
+      );
+      return _responseParser(response, parser);
+    } on DioException catch (e) {
+      return _dioErrorResponse(e);
     } catch (e) {
       log(e.toString());
       return ApiResponse.unknow(errorDescription: e.toString());

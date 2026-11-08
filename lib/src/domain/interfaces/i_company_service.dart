@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../../application/application.dart';
 import '../../shared/shared.dart';
 import '../domain.dart';
@@ -42,4 +44,29 @@ abstract interface class ICompanyService {
   Future<ApiResponse> updateCompany(String companyId, CompanyDto request);
 
   Future<ApiResponse<List<Employee>?>> getEmployees(String companyId);
+
+  /// Lista os barbeiros pela rota do dono da empresa.
+  Future<ApiResponse<List<Employee>?>> getCompanyEmployees(String companyId);
+
+  Future<ApiResponse<Employee?>> addEmployee(
+    String companyId,
+    Employee employee,
+  );
+
+  Future<ApiResponse<Employee?>> updateEmployee(
+    String companyId,
+    String employeeId, {
+    String? name,
+  });
+
+  /// Envia a foto (JPEG, PNG ou WebP, até 2 MB). Devolve o barbeiro atualizado.
+  Future<ApiResponse<Employee?>> uploadEmployeePhoto(
+    String companyId,
+    String employeeId, {
+    required Uint8List bytes,
+    required String filename,
+    required String contentType,
+  });
+
+  Future<ApiResponse> removeEmployee(String companyId, String employeeId);
 }

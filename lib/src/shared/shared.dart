@@ -5,4 +5,6 @@ export "components/loading_tile.dart";
 export "components/form_alert.dart";
 export "components/custom_radio_list_tile.dart";
 export "components/alert_dialogs.dart";
+export "components/employee_avatar.dart";
+export "utils/picked_image.dart";
 export 'package:ltech_core/ltech_core.dart';

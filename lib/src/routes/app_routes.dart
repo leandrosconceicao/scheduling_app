@@ -11,6 +11,7 @@ abstract final class AppRoutes {
   static const adminLogin = "admin-login";
   static const adminConfig = "admin-config";
   static const adminConfigServices = "admin-config-services";
+  static const adminConfigEmployees = "admin-config-employees";
 }
 
 extension AppNavigation on GoRouter {
@@ -21,7 +22,10 @@ extension AppNavigation on GoRouter {
   }
 
   Future<void> pushScheduleForm(String companyId) {
-    return pushNamed(AppRoutes.scheduleForm, pathParameters: _company(companyId));
+    return pushNamed(
+      AppRoutes.scheduleForm,
+      pathParameters: _company(companyId),
+    );
   }
 
   /// Retorna `true` quando o usuário concluiu o login.
@@ -51,5 +55,12 @@ extension AppNavigation on GoRouter {
 
   void goAdminConfigServices(String companyId) {
     goNamed(AppRoutes.adminConfigServices, pathParameters: _company(companyId));
+  }
+
+  void goAdminConfigEmployees(String companyId) {
+    goNamed(
+      AppRoutes.adminConfigEmployees,
+      pathParameters: _company(companyId),
+    );
   }
 }
