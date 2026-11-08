@@ -24,7 +24,7 @@ class _FakeCompanyService implements ICompanyService {
   }
 
   @override
-  Future<ApiResponse<List<ScheduleType>?>> getScheduleTypes(String id) async {
+  Future<ApiResponse<List<ScheduleType>?>> getCompanyScheduleTypes(String id) async {
     await listGate?.future;
     return listResponse ?? ApiResponse.result(data: stored);
   }

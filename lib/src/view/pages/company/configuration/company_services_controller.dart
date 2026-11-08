@@ -60,7 +60,7 @@ final class CompanyServicesController extends GetxController {
     loadError.value = "";
 
     final companyRequest = _service.getCompany(companyId);
-    final typesResponse = await _service.getScheduleTypes(companyId);
+    final typesResponse = await _service.getCompanyScheduleTypes(companyId);
     final companyResponse = await companyRequest;
 
     defaultPeriodInMinutes.value =

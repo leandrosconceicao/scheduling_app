@@ -12,6 +12,11 @@ abstract interface class ICompanyService {
 
   Future<ApiResponse<List<ScheduleType>?>> getScheduleTypes(String companyId);
 
+  /// Lista os serviços pela rota do dono da empresa.
+  Future<ApiResponse<List<ScheduleType>?>> getCompanyScheduleTypes(
+    String companyId,
+  );
+
   Future<ApiResponse> removeScheduleType(String companyId, String typeId);
 
   Future<ApiResponse<ScheduleType?>> updateScheduleType(

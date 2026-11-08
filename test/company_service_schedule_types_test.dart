@@ -98,12 +98,23 @@ void main() {
     service = CompanyConfigService(client, _FakeOwnerSession());
   });
 
-  test("getScheduleTypes usa a rota do dono com o token do dono", () async {
+  test(
+    "getCompanyScheduleTypes usa a rota do dono com o token do dono",
+    () async {
+      await service.getCompanyScheduleTypes("company1");
+
+      expect(client.method, "GET");
+      expect(client.endpoint, "/company/company1/schedule_types");
+      expect(client.headers, ownerHeaders);
+    },
+  );
+
+  test("getScheduleTypes usa a rota do cliente sem o token do dono", () async {
     await service.getScheduleTypes("company1");
 
     expect(client.method, "GET");
-    expect(client.endpoint, "/company/company1/schedule_types");
-    expect(client.headers, ownerHeaders);
+    expect(client.endpoint, "/schedules/types/company1");
+    expect(client.headers, isNull);
   });
 
   test("addNewScheduleType envia o token do dono", () async {

@@ -59,6 +59,16 @@ final class CompanyConfigService implements ICompanyService {
   @override
   Future<ApiResponse<List<ScheduleType>?>> getScheduleTypes(String companyId) {
     return _client.get(
+      endpoint: "$_endpoint/types/$companyId",
+      parser: (json) => ScheduleType.toList(json),
+    );
+  }
+
+  @override
+  Future<ApiResponse<List<ScheduleType>?>> getCompanyScheduleTypes(
+    String companyId,
+  ) {
+    return _client.get(
       endpoint: "$_companyEndpoint/$companyId/schedule_types",
       headers: _ownerHeaders,
       parser: (json) => ScheduleType.toList(json),
