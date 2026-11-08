@@ -42,6 +42,15 @@ final class SchedulePageController extends GetxController with AlertActions {
 
   Runner? runner;
 
+  /// Relógio da tela inicial (atualiza o selo aberto/fechado).
+  Timer? _clock;
+
+  final now = DateTime.now().obs;
+
+  /// Carregamento inicial da tela inicial e erro, se a empresa não carregar.
+  final homeLoading = true.obs;
+  final homeError = "".obs;
+
   final selectedPeriod = Rx<DateTimeRange>(
     DateTimeRange(start: _now, end: _now.add(Duration(days: 7))),
   );
@@ -95,6 +104,29 @@ final class SchedulePageController extends GetxController with AlertActions {
           email: authService.userEmail,
         );
 
+  Company? get company => companyData.value;
+
+  StoreStatus? get storeStatus => company == null
+      ? null
+      : StoreStatus.of(company!.configuration, now.value);
+
+  /// Dias em que a empresa não funciona não têm horários (a API recusa).
+  bool isOpenOn(DateTime day) => company?.configuration.isOpenOn(day) ?? true;
+
+  bool get hasContent => company != null;
+
+  bool get hasContacts {
+    final social = company?.social;
+    return social != null &&
+        [
+          social.whatsapp,
+          social.phone,
+          social.instagram,
+          social.facebook,
+          social.email,
+        ].any((e) => e.trim().isNotEmpty);
+  }
+
   bool get showScheduleValues =>
       companyData.value?.configuration.showScheduleValues ?? false;
 
@@ -102,7 +134,11 @@ final class SchedulePageController extends GetxController with AlertActions {
   void onInit() {
     super.onInit();
     createCalendar();
-    Future.wait([loadCompanyData(), loadTypes(), loadEmployees()]);
+    loadHome();
+    _clock = Timer.periodic(
+      const Duration(minutes: 1),
+      (_) => now.value = DateTime.now(),
+    );
     initListener();
     listenCurrentSchedules();
   }
@@ -111,6 +147,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   void onClose() {
     clearListener();
     clearCurrentRunner();
+    _clock?.cancel();
     super.onClose();
   }
 
@@ -120,7 +157,7 @@ final class SchedulePageController extends GetxController with AlertActions {
       callback: () async {
         final now = DateTime.now();
 
-        if (schedules.first.startsAt.isBefore(now)) {
+        if (schedules.isNotEmpty && schedules.first.startsAt.isBefore(now)) {
           loadSchedules(true);
         }
       },
@@ -129,7 +166,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   void clearCurrentRunner() {
-    runner?.stop();
+    runner?.dispose();
     runner = null;
   }
 
@@ -161,26 +198,50 @@ final class SchedulePageController extends GetxController with AlertActions {
     calendar.addAll(dates);
   }
 
-  Future<void> loadCompanyData() async {
+  /// Carrega loja, serviços e barbeiros. Só a loja é obrigatória: se ela
+  /// falhar, a tela mostra o erro; serviços e barbeiros vazios são aceitáveis.
+  Future<void> loadHome() async {
+    homeLoading.value = true;
+    homeError.value = "";
+
+    final results = await Future.wait([
+      loadCompanyData(),
+      loadTypes(),
+      loadEmployees(),
+    ]);
+
+    if (companyData.value == null) {
+      homeError.value = results.first.isNotEmpty
+          ? results.first
+          : "Não foi possível carregar as informações do estabelecimento";
+    }
+    homeLoading.value = false;
+  }
+
+  /// Retorna a mensagem de erro (vazia em caso de sucesso).
+  Future<String> loadCompanyData() async {
     final res = await service.getCompany(companyId);
 
     companyData.trigger(res.data);
+    return res.data == null ? res.description : "";
   }
 
-  Future<void> loadEmployees() async {
+  Future<String> loadEmployees() async {
     employees.clear();
 
     final res = await service.getEmployees(companyId);
 
     employees.addAll(res.data ?? []);
+    return "";
   }
 
-  Future<void> loadTypes() async {
+  Future<String> loadTypes() async {
     scheduleTypes.clear();
 
     final res = await service.getScheduleTypes(companyId);
 
     scheduleTypes.addAll(res.data ?? []);
+    return "";
   }
 
   Future<void> loadSchedules([bool clear = false]) async {

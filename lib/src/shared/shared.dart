@@ -8,3 +8,4 @@ export "components/alert_dialogs.dart";
 export "components/employee_avatar.dart";
 export "utils/picked_image.dart";
 export 'package:ltech_core/ltech_core.dart';
+export "utils/open_link.dart";

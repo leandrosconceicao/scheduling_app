@@ -57,8 +57,9 @@ class ScheduleDateStep extends GetView<SchedulePageController> with Validators {
                           final now = DateTime.now();
 
                           return day.isAfter(
-                            DateTime(now.year, now.month, now.day - 1),
-                          );
+                                DateTime(now.year, now.month, now.day - 1),
+                              ) &&
+                              controller.isOpenOn(day);
                         },
                       ),
                     ),

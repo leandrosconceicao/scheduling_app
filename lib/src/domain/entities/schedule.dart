@@ -52,6 +52,8 @@ final class Schedule {
       "endsAt": "${endsAt.toIso8601String()}-03:00",
       "typeId": typeId,
       "employeeId": employeeId,
+      // A confirmação (POST /schedules) exige o telefone na raiz do corpo.
+      if (client != null) "phoneNumber": client!.phoneNumber,
       "client": client?.toJson()
     };
   }

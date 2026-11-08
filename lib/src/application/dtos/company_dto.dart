@@ -1,3 +1,5 @@
+import '../../domain/domain.dart';
+
 final class CompanyDto {
   final String? cnpj;
   final String? name;
@@ -27,6 +29,8 @@ final class CompanyDto {
   }
 }
 
+/// Atualização parcial: só os campos não nulos são enviados e `""` limpa o
+/// campo na API.
 final class SocialDto {
   final String? instagram;
   final String? facebook;
@@ -44,45 +48,51 @@ final class SocialDto {
 
   Map<String, dynamic> toJson() {
     return {
-      if (instagram?.isNotEmpty ?? false) 'instagram': instagram,
-      if (facebook?.isNotEmpty ?? false) 'facebook': facebook,
-      if (whatsapp?.isNotEmpty ?? false) 'whatsapp': whatsapp,
-      if (email?.isNotEmpty ?? false) 'email': email,
-      if (phone?.isNotEmpty ?? false) 'phone': phone,
+      if (instagram != null) 'instagram': instagram,
+      if (facebook != null) 'facebook': facebook,
+      if (whatsapp != null) 'whatsapp': whatsapp,
+      if (email != null) 'email': email,
+      if (phone != null) 'phone': phone,
     };
   }
 }
 
+/// Configuração parcial do `PATCH /company/:id`: só os campos enviados são
+/// alterados. [workingDays], se enviado, substitui a lista inteira.
 final class CompanyConfigurationDto {
-  final String? primaryColor;
-  final String? secondaryColor;
-  final String? timezone;
-  final String? language;
-  final String? currency;
-  final bool? appointmentConfirmationRequired;
+  final int? defaultPeriodInMinutes;
+  final String? openingHours;
+  final String? closingTime;
+  final LunchBreak? lunchBreak;
+  final int? lockSchedulePeriodInMinutes;
+  final List<WorkingDay>? workingDays;
 
   CompanyConfigurationDto({
-    this.primaryColor,
-    this.secondaryColor,
-    this.timezone,
-    this.language,
-    this.currency,
-    this.appointmentConfirmationRequired,
+    this.defaultPeriodInMinutes,
+    this.openingHours,
+    this.closingTime,
+    this.lunchBreak,
+    this.lockSchedulePeriodInMinutes,
+    this.workingDays,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      if (primaryColor?.isNotEmpty ?? false) 'primaryColor': primaryColor,
-      if (secondaryColor?.isNotEmpty ?? false) 'secondaryColor': secondaryColor,
-      if (timezone?.isNotEmpty ?? false) 'timezone': timezone,
-      if (language?.isNotEmpty ?? false) 'language': language,
-      if (currency?.isNotEmpty ?? false) 'currency': currency,
-      if (appointmentConfirmationRequired != null)
-        'appointmentConfirmationRequired': appointmentConfirmationRequired,
+      if (defaultPeriodInMinutes != null)
+        'defaultPeriodInMinutes': defaultPeriodInMinutes,
+      if (openingHours?.isNotEmpty ?? false) 'openingHours': openingHours,
+      if (closingTime?.isNotEmpty ?? false) 'closingTime': closingTime,
+      if (lunchBreak != null) 'lunchBreak': lunchBreak!.toJson(),
+      if (lockSchedulePeriodInMinutes != null)
+        'lockSchedulePeriodInMinutes': lockSchedulePeriodInMinutes,
+      if (workingDays != null)
+        'workingDays': workingDays!.map((e) => e.toJson()).toList(),
     };
   }
 }
 
+/// Atualização parcial: só os campos não nulos são enviados e `""` limpa o
+/// campo na API.
 final class AddressDto {
   final String? zipCode;
   final String? street;
@@ -90,7 +100,9 @@ final class AddressDto {
   final String? complement;
   final String? neighborhood;
   final String? city;
+  final String? cityCode;
   final String? state;
+  final String? countryCode;
 
   AddressDto({
     this.zipCode,
@@ -99,18 +111,22 @@ final class AddressDto {
     this.complement,
     this.neighborhood,
     this.city,
+    this.cityCode,
     this.state,
+    this.countryCode,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      if (zipCode?.isNotEmpty ?? false) 'zipCode': zipCode,
-      if (street?.isNotEmpty ?? false) 'street': street,
-      if (number?.isNotEmpty ?? false) 'number': number,
-      if (complement?.isNotEmpty ?? false) 'complement': complement,
-      if (neighborhood?.isNotEmpty ?? false) 'neighborhood': neighborhood,
-      if (city?.isNotEmpty ?? false) 'city': city,
-      if (state?.isNotEmpty ?? false) 'state': state,
+      if (zipCode != null) 'zipCode': zipCode,
+      if (street != null) 'street': street,
+      if (number != null) 'number': number,
+      if (complement != null) 'complement': complement,
+      if (neighborhood != null) 'neighborhood': neighborhood,
+      if (city != null) 'city': city,
+      if (cityCode != null) 'cityCode': cityCode,
+      if (state != null) 'state': state,
+      if (countryCode != null) 'countryCode': countryCode,
     };
   }
 }
