@@ -43,6 +43,14 @@ abstract interface class ICompanyService {
   Future<ApiResponse<Company?>> getCompanyBySubdomain(String subdomain);
   Future<ApiResponse> updateCompany(String companyId, CompanyDto request);
 
+  /// Envia a logo (JPEG, PNG ou WebP, até 2 MB). Devolve a empresa atualizada.
+  Future<ApiResponse<Company?>> uploadCompanyLogo(
+    String companyId, {
+    required Uint8List bytes,
+    required String filename,
+    required String contentType,
+  });
+
   Future<ApiResponse<List<Employee>?>> getEmployees(String companyId);
 
   /// Lista os barbeiros pela rota do dono da empresa.

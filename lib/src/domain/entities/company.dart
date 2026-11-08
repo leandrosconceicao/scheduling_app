@@ -7,6 +7,7 @@ final class Company {
   final String cnpj;
   final String name;
   final String logoUrl;
+  final String subdomain;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final Address address;
@@ -24,6 +25,7 @@ final class Company {
     required this.configuration,
     required this.social,
     required this.geoLocation,
+    this.subdomain = "",
     this.createdAt,
     this.updatedAt,
   }) : scheduleTypes = [];
@@ -33,6 +35,7 @@ final class Company {
       cnpj = json['cnpj'] ?? '',
       name = json['name'] ?? '',
       logoUrl = json['logoUrl'] ?? '',
+      subdomain = json['subdomain'] ?? '',
       createdAt = DateTime.tryParse(json['createdAt'] ?? ''),
       updatedAt = DateTime.tryParse(json['updatedAt'] ?? ''),
       address = Address.fromJson(json['address'] ?? const <String, dynamic>{}),

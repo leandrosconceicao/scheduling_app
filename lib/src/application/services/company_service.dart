@@ -140,6 +140,31 @@ final class CompanyConfigService implements ICompanyService {
   }
 
   @override
+  Future<ApiResponse<Company?>> uploadCompanyLogo(
+    String companyId, {
+    required Uint8List bytes,
+    required String filename,
+    required String contentType,
+  }) async {
+    final uploader = _uploader;
+
+    if (uploader == null) {
+      return ApiResponse.unknow(
+        errorDescription: "Envio de arquivos não disponível",
+      );
+    }
+
+    return uploader.putForm(
+      endpoint: "$_companyEndpoint/update_logo/$companyId",
+      headers: _ownerHeaders,
+      bytes: bytes,
+      filename: filename,
+      contentType: contentType,
+      parser: (json) => Company.fromJson(json),
+    );
+  }
+
+  @override
   Future<ApiResponse<Company?>> getCompanyBySubdomain(String subdomain) {
     return _client.get(
       endpoint: "$_companyEndpoint/search_domain?subdomain=$subdomain",

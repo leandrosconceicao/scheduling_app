@@ -20,3 +20,4 @@ export "mixins/alert_actions.dart";
 export "utils/runner.dart";
 export "utils/store_status.dart";
 export "utils/store_links.dart";
+export "utils/company_settings.dart";
