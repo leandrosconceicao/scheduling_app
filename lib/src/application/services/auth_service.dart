@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:ltech_core/ltech_core.dart';
@@ -18,7 +20,8 @@ final class AuthService extends GetxController implements IAuthService {
       if (currentUser == null) {
         await signInAnonymously();
       }
-      saveJwtToken();
+      await saveJwtToken();
+      if (!_ready.isCompleted) _ready.complete();
     });
     super.onInit();
   }
@@ -29,7 +32,13 @@ final class AuthService extends GetxController implements IAuthService {
 
   final user = Rxn<User>();
 
-  void saveJwtToken() async {
+  final _ready = Completer<void>();
+
+  /// Completa quando o primeiro token (anônimo ou não) já foi salvo.
+  @override
+  Future<void> get tokenReady => _ready.future;
+
+  Future<void> saveJwtToken() async {
     try {
       final idToken = await user.value?.getIdTokenResult();
 

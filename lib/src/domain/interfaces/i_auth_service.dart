@@ -14,6 +14,9 @@ abstract interface class IAuthService {
   String get profilePhotoImage;
   String get uid;
 
+  /// Completa quando o token inicial já está disponível no repositório local.
+  Future<void> get tokenReady;
+
   Future<ApiResponse<UserCredential?>> loginWithEmail(String email, String password);
   Future<ApiResponse> signUpWithEmail(String email, String password, String name);
   Future<ApiResponse> logout();

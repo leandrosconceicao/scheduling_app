@@ -30,7 +30,19 @@ final class HttpClient implements IHttpClient, IFormUploadClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final repository = Get.find<ILocalRepository>();
-          // final auth = app.headers?["authorization"] ?? "";
+
+          // Na inicialização o token do Firebase ainda pode não ter sido
+          // salvo; espera por ele antes de enviar a requisição.
+          if (!options.headers.containsKey('authorization') &&
+              !(repository.read<String>("access_token")?.hasContent ??
+                  false)) {
+            try {
+              await Get.find<IAuthService>().tokenReady.timeout(
+                const Duration(seconds: 10),
+              );
+            } catch (_) {}
+          }
+
           final auth = repository.read<String>("access_token") ?? "";
 
           // Um token passado na requisição (ex.: rotas do dono) tem prioridade.
