@@ -22,6 +22,11 @@ class OwnerSchedulesPage extends GetView<OwnerSchedulesController> {
             icon: Icon(MdiIcons.cogOutline),
             onPressed: () => GoRouter.of(context).goAdminConfig(controller.companyId),
           ),
+          IconButton(
+            tooltip: "Sair da área administrativa",
+            icon: Icon(MdiIcons.logout),
+            onPressed: controller.logout,
+          ),
         ],
       ),
       body: Align(

@@ -243,11 +243,6 @@ class _Hub extends StatelessWidget {
             ).goAdminConfigEmployees(controller.companyId),
           ),
         ]),
-        TextButton.icon(
-          onPressed: controller.logout,
-          icon: Icon(MdiIcons.logout, size: 20),
-          label: const Text("Sair da área administrativa"),
-        ),
       ],
     );
   }

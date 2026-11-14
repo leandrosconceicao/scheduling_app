@@ -123,9 +123,6 @@ final class CompanyConfigurationController extends GetxController {
       section.value == ConfigSection.funcionamento &&
       !setEquals(workingDays.toSet(), _savedDays);
 
-  /// Encerra a sessão do dono; o roteador leva de volta ao login da empresa.
-  void logout() => Get.find<IOwnerSessionService>().end();
-
   Future<void> loadCompanyData() async {
     companyData.value = null;
 

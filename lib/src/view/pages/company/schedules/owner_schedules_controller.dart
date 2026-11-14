@@ -61,6 +61,9 @@ final class OwnerSchedulesController extends GetxController {
     super.onClose();
   }
 
+  /// Encerra a sessão do dono; o roteador leva de volta ao login da empresa.
+  void logout() => Get.find<IOwnerSessionService>().end();
+
   /// Com busca, a consulta ignora o dia e traz do mais recente ao mais antigo.
   bool get searching => query.value.trim().isNotEmpty;
 

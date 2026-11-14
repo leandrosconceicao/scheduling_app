@@ -46,6 +46,7 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 dev_config.json
+config.json
 firebase.json
 
 # Configuração e credenciais locais (veja o README)

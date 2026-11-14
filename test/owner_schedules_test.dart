@@ -32,8 +32,13 @@ Map<String, dynamic> _json(
 }
 
 class _FakeOwnerSession implements IOwnerSessionService {
+  bool ended = false;
+
   @override
   String get token => "owner-token";
+
+  @override
+  Future<void> end() async => ended = true;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -352,6 +357,17 @@ void main() {
       expect(find.text("Cliente a"), findsOneWidget);
       expect(find.text("Agendado"), findsOneWidget);
       expect(find.text("Cancelado"), findsWidgets);
+    });
+
+    testWidgets("sair encerra a sessão do dono", (tester) async {
+      final session = _FakeOwnerSession();
+      Get.put<IOwnerSessionService>(session);
+      await pump(tester);
+
+      await tester.tap(find.byTooltip("Sair da área administrativa"));
+      await tester.pump();
+
+      expect(session.ended, isTrue);
     });
 
     testWidgets("dia vazio mostra mensagem", (tester) async {
