@@ -21,7 +21,7 @@ class SignupPage extends GetView<SignupController>
             mainAxisAlignment: .center,
             spacing: 32.0,
             children: [
-              Center(child: FlutterLogo(size: 120)),
+              Image.asset("images/app_logo-dourado.png", height: 150,),
               Text("Faça seu cadastro", style: Theme.of(context).textTheme.titleLarge),
               Form(
                 key: controller.formKey,

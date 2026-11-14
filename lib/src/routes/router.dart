@@ -119,6 +119,18 @@ class AppRouter {
               ),
             ),
             GoRoute(
+              path: "admin/agendamentos",
+              name: AppRoutes.adminSchedules,
+              redirect: ownerGuard.requireOwner,
+              pageBuilder: (_, state) => appPage(
+                state,
+                ControllerScope(
+                  create: () => OwnerSchedulesController(_companyId(state)),
+                  child: const OwnerSchedulesPage(),
+                ),
+              ),
+            ),
+            GoRoute(
               path: "admin/configuracoes",
               name: AppRoutes.adminConfig,
               redirect: ownerGuard.requireOwner,

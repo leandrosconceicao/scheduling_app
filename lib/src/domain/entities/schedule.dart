@@ -42,9 +42,7 @@ final class Schedule {
       companyId = json["companyId"] ?? "",
       client = json["client"] == null ? null : Client.fromJson(json['client']),
       typeId = json["typeId"] ?? "",
-      state = ScheduleState.values.firstWhere(
-        (e) => e.code == (json["state"] ?? "open"),
-      ),
+      state = ScheduleState.parse(json["state"]),
       stateDescription = json['stateDescription'] ?? "Aberto",
       lockExpiration = json['lockPeriodDetail'] == null ? null : ScheduleLockExpiration.fromJson(json['lockPeriodDetail']),
       typeDetail = json['typeDetail'] == null ? null : ScheduleType.fromJson(json['typeDetail']),
@@ -92,7 +90,11 @@ final class Schedule {
   bool get isScheduled => state == .scheduled;
   bool get isClosed => state == .closed;
   bool get isLocked => state == .lock;
-  bool get isCanceled => cancellation != null;
+  bool get isCompleted => state == .completed;
+
+  /// Cancelado pelo estado ou pelo registro de cancelamento (que a API
+  /// preenche hoje sem alterar o `state`).
+  bool get isCanceled => state == .canceled || cancellation != null;
 
   Duration get duration => endsAt.difference(startsAt);
 

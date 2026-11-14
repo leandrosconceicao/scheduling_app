@@ -10,6 +10,7 @@ abstract final class AppRoutes {
   static const login = "login";
   static const signup = "signup";
   static const adminLogin = "admin-login";
+  static const adminSchedules = "admin-schedules";
   static const adminConfig = "admin-config";
   static const adminConfigServices = "admin-config-services";
   static const adminConfigEmployees = "admin-config-employees";
@@ -52,6 +53,10 @@ extension AppNavigation on GoRouter {
 
   Future<void> pushAdminLogin(String companyId) {
     return pushNamed(AppRoutes.adminLogin, pathParameters: _company(companyId));
+  }
+
+  void goAdminSchedules(String companyId) {
+    goNamed(AppRoutes.adminSchedules, pathParameters: _company(companyId));
   }
 
   void goAdminConfig(String companyId) {

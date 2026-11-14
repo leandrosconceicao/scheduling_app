@@ -38,6 +38,12 @@ void dependencyInjection() {
       Get.find<IOwnerSessionService>(),
     ),
   );
+  Get.put<IOwnerScheduleService>(
+    OwnerScheduleService(
+      Get.find<IHttpClient>(),
+      Get.find<IOwnerSessionService>(),
+    ),
+  );
   Get.lazyPut<INavigationService>(
     () => GoRouterNavigationService(AppRouter().instance),
     fenix: true,

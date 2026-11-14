@@ -52,6 +52,15 @@ class CompanyConfigurationPage extends GetView<CompanyConfigurationController> {
                   )
                 : null,
             title: Text(inSection ? section.title : "Configurações"),
+            actions: [
+              if (!inSection)
+                IconButton(
+                  tooltip: "Agenda",
+                  icon: Icon(MdiIcons.calendarMonthOutline),
+                  onPressed: () =>
+                      GoRouter.of(context).goAdminSchedules(controller.companyId),
+                ),
+            ],
           ),
           body: _body(context, wide),
           bottomNavigationBar: inSection

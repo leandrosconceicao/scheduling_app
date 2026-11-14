@@ -51,6 +51,12 @@ GoRouter _router(IOwnerSessionService session, String initialLocation) {
             builder: (_, _) => const Text("admin-login"),
           ),
           GoRoute(
+            path: "admin/agendamentos",
+            name: AppRoutes.adminSchedules,
+            redirect: guard.requireOwner,
+            builder: (_, _) => const Text("admin-schedules"),
+          ),
+          GoRoute(
             path: "admin/configuracoes",
             name: AppRoutes.adminConfig,
             redirect: guard.requireOwner,
@@ -116,14 +122,41 @@ void main() {
     );
   });
 
-  testWidgets('authenticated owner skips the login page', (tester) async {
+  testWidgets('authenticated owner skips the login page and lands on the schedules',
+      (tester) async {
     final session = _FakeOwnerSession();
     await session.start("token");
 
     final router = await _pump(tester, session, "/c1/admin/login");
 
+    expect(find.text("admin-schedules"), findsOneWidget);
+    expect(_location(router), "/c1/admin/agendamentos");
+  });
+
+  testWidgets('authenticated owner skips the login page and honors "from"',
+      (tester) async {
+    final session = _FakeOwnerSession();
+    await session.start("token");
+
+    final router = await _pump(
+      tester,
+      session,
+      "/c1/admin/login?from=%2Fc1%2Fadmin%2Fconfiguracoes",
+    );
+
     expect(find.text("admin-config"), findsOneWidget);
     expect(_location(router), "/c1/admin/configuracoes");
+  });
+
+  testWidgets('schedules area without session redirects to login keeping "from"',
+      (tester) async {
+    final router = await _pump(tester, _FakeOwnerSession(), "/c1/admin/agendamentos");
+
+    expect(find.text("admin-login"), findsOneWidget);
+    expect(
+      _location(router),
+      "/c1/admin/login?from=%2Fc1%2Fadmin%2Fagendamentos",
+    );
   });
 
   testWidgets('legacy /agendamentos links redirect to the company route',

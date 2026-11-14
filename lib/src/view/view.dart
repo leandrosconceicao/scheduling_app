@@ -23,5 +23,8 @@ export "pages/company/configuration/company_service_form.dart";
 export "pages/company/configuration/company_configuration_employees.dart";
 export "pages/company/configuration/company_employees_controller.dart";
 export "pages/company/configuration/company_employee_form.dart";
+export "pages/company/schedules/owner_schedules_controller.dart";
+export "pages/company/schedules/owner_schedules_page.dart";
+export "pages/company/schedules/appointment_detail.dart";
 export "pages/company/login/company_login_controller.dart";
 export "pages/company/login/company_login_page.dart";

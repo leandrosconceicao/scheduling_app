@@ -27,7 +27,7 @@ final class OwnerGuard {
 
     return safeFrom(state.uri.queryParameters["from"]) ??
         state.namedLocation(
-          AppRoutes.adminConfig,
+          AppRoutes.adminSchedules,
           pathParameters: state.pathParameters,
         );
   }

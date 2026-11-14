@@ -18,7 +18,7 @@ class CompanyLoginPage extends GetView<CompanyLoginController>
     final router = GoRouter.of(context);
     final from = controller.from;
 
-    from != null ? router.go(from) : router.goAdminConfig(controller.companyId);
+    from != null ? router.go(from) : router.goAdminSchedules(controller.companyId);
   }
 
   @override
