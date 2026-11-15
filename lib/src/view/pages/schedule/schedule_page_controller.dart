@@ -38,6 +38,9 @@ final class SchedulePageController extends GetxController with AlertActions {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  /// Âncora da seção de horários, usada para rolar até ela após escolher a data.
+  final timeSectionKey = GlobalKey();
+
   static final _now = DateTime.now();
 
   Runner? runner;
@@ -245,7 +248,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   Future<void> loadSchedules([bool clear = false]) async {
-    loading.toggle();
+    loading.value = true;
     if (clear) {
       schedules.clear();
     }
@@ -259,7 +262,7 @@ final class SchedulePageController extends GetxController with AlertActions {
 
     // reloadBasket(res.data ?? []);
 
-    loading.toggle();
+    loading.value = false;
 
     if (schedules.isEmpty) {
       schedules.addAll(res.data ?? []);

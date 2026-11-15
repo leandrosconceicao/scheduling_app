@@ -131,7 +131,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
           child: Center(child: Text("$step")),
         ),
         Text(description, textAlign: .center, style: TextStyle(
-          fontSize: 12
+          fontSize: 10
         ),),
       ],
     );
