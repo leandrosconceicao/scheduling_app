@@ -40,7 +40,7 @@ final class SignupController extends GetxController {
       return;
     }
 
-    AppAlertDialog.show(body: "Usuário cadastrado com sucesso!");
+    AppAlertDialog.successAlert(body: "Usuário cadastrado com sucesso!");
 
     clearValues();
 

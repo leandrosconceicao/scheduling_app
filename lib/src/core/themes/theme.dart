@@ -32,6 +32,18 @@ final appTheme = ThemeData(
   iconTheme: IconThemeData(
     color: golden
   ),
+  dialogTheme: DialogThemeData(
+    shape: RoundedRectangleBorder(
+      side: BorderSide(color: golden.withValues(alpha: .4), width: 1.5),
+      borderRadius: 8.borderRadius,
+    ),
+    titleTextStyle: GoogleFonts.montserrat(
+      color: golden,
+      fontSize: 22,
+      fontWeight: FontWeight.w500,
+    ),
+    contentTextStyle: GoogleFonts.montserrat(color: white, fontSize: 16),
+  ),
   drawerTheme: DrawerThemeData(
     shape: BeveledRectangleBorder()
   ),

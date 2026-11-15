@@ -1,56 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ltech_core/ltech_core.dart';
 
 import '../../core/core.dart';
+import '../../domain/domain.dart';
+import 'alert_dialogs.dart';
 
-class AppAlertDialog extends StatelessWidget {
-  final String? title;
-  final String? body;
-  final String? tecnical;
-
-  const AppAlertDialog({super.key, this.title, this.body, this.tecnical});
+class AppAlertDialog {
+  const AppAlertDialog._();
 
   /// Contexto do navigator raiz, para diálogos abertos fora da árvore de widgets.
   static BuildContext get _rootContext => rootNavigatorKey.currentContext!;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return AlertDialog(
-      // alignment: Alignment.topCenter,
-      title: ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: SelectableText(
-          title ?? "Atenção",
-          style: textTheme.titleLarge,
-        ),
-        subtitle: SelectableText(
-          "Data: ${DateTime.now().toDefaultDateWithHour}",
-          style: textTheme.labelSmall,
-        ),
-      ),
-      content: alertBody(body, tecnical: tecnical),
-      actions: <Widget>[
-        TextButton(
-          child: const Text(
-            "Ok",
-            style: TextStyle(color: Colors.blue, fontSize: 16),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
-    );
-  }
-
-  static Widget alertBody(String? body, {String? tecnical}) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SelectableText(body ?? 'Ocorreu um problema com requisição'),
-        ],
-      ),
-    );
-  }
 
   static Widget wait({String? message}) {
     return Material(
@@ -62,22 +20,17 @@ class AppAlertDialog extends StatelessWidget {
     );
   }
 
-  static Future<void> show({
-    String? title,
-    String? body,
-    String? tecnical,
-  }) async {
-    await showDialog<void>(
-      context: _rootContext,
-      builder: (_) => AppAlertDialog(title: title, body: body, tecnical: tecnical),
+  /// Alerta de erro (visual padrão de [DefaultAlert]).
+  static Future<void> show({String? title, String? body, String? tecnical}) {
+    return DefaultAlert.show(
+      title: title ?? "Atenção",
+      message: body ?? 'Ocorreu um problema com requisição',
+      severity: Severity.error,
     );
   }
 
-  static Future<void> successAlert({String? title, String? body}) async {
-    await showDialog<void>(
-      context: _rootContext,
-      builder: (_) => AppAlertDialog(title: title, body: body),
-    );
+  static Future<void> successAlert({String? title, String? body}) {
+    return DefaultAlert.show(title: title ?? "Atenção", message: body ?? "");
   }
 
   static Future<bool?> confirmRequest({
@@ -86,41 +39,13 @@ class AppAlertDialog extends StatelessWidget {
     String cancelLabel = "Não",
     String confirmLabel = "Sim",
     bool destructive = false,
-  }) async {
-    return await showDialog<bool>(
-      context: _rootContext,
-      builder: (context) => AlertDialog(
-        title: Text(title ?? "Atenção"),
-        content: Text(message),
-        actions: [
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(cancelLabel),
-                ),
-              ),
-              Expanded(
-                child: FilledButton(
-                  style: destructive
-                      ? ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Colors.red.shade700,
-                          ),
-                          foregroundColor: const WidgetStatePropertyAll(
-                            Colors.white,
-                          ),
-                        )
-                      : null,
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(confirmLabel),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+  }) {
+    return DefaultAlert.confirm(
+      title: title ?? "Atenção",
+      message: message,
+      cancelLabel: cancelLabel,
+      confirmLabel: confirmLabel,
+      destructive: destructive,
     );
   }
 
