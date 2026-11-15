@@ -104,7 +104,7 @@ class _CompanyServiceFormState extends State<CompanyServiceForm> {
 
     setState(() => _formError = "");
 
-    if (!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validateAndScroll()) {
       final firstInvalid = _validateName(_name.text) != null
           ? _nameFocus
           : _priceFocus;

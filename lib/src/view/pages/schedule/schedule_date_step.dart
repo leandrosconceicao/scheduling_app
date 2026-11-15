@@ -11,17 +11,18 @@ class ScheduleDateStep extends GetView<SchedulePageController> with Validators {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: ScheduleStepSession(
+    // Column (e não slivers) para que todos os campos fiquem construídos e
+    // sejam validados mesmo fora da tela.
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ScheduleStepSession(
             "Escolha a data",
             MdiIcons.calendarMultiselectOutline,
           ),
-        ),
-        8.sliverVertialBox,
-        SliverToBoxAdapter(
-          child: FormField<DateTime>(
+          8.verticalBox,
+          FormField<DateTime>(
             autovalidateMode: .onUserInteractionIfError,
             initialValue: controller.selectedDate.value,
             validator: (value) {
@@ -68,17 +69,10 @@ class ScheduleDateStep extends GetView<SchedulePageController> with Validators {
               );
             },
           ),
-        ),
-        8.sliverVertialBox,
-        SliverToBoxAdapter(
-          child: ScheduleStepSession(
-            "Escolha o horário",
-            MdiIcons.clockOutline,
-          ),
-        ),
-        8.sliverVertialBox,
-        SliverToBoxAdapter(
-          child: FormField<Schedule>(
+          8.verticalBox,
+          ScheduleStepSession("Escolha o horário", MdiIcons.clockOutline),
+          8.verticalBox,
+          FormField<Schedule>(
             initialValue: controller.selectedSchedule.value,
             autovalidateMode: .onUserInteractionIfError,
             validator: (value) {
@@ -107,9 +101,9 @@ class ScheduleDateStep extends GetView<SchedulePageController> with Validators {
                       return InkWell(
                         onTap: schedule.isOpen
                             ? () {
-                              state.didChange(schedule);
-                              controller.selectSchedule(schedule);
-                            }
+                                state.didChange(schedule);
+                                controller.selectSchedule(schedule);
+                              }
                             : null,
                         child: Obx(
                           () => Container(
@@ -135,45 +129,8 @@ class ScheduleDateStep extends GetView<SchedulePageController> with Validators {
               ],
             ),
           ),
-        ),
-        // Obx(() {
-        //   if (controller.schedules.isEmpty) {
-        //     return SliverToBoxAdapter(child: Text("Nenhum horário disponível"));
-        //   }
-        //   return SliverGrid.builder(
-        //     itemCount: controller.schedules.length,
-        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //       childAspectRatio: 6 / 2,
-        //       crossAxisCount: 3,
-        //       mainAxisSpacing: 8.0,
-        //       crossAxisSpacing: 8.0,
-        //     ),
-        //     itemBuilder: (_, i) {
-        //       final schedule = controller.schedules[i];
-        //       return InkWell(
-        //         onTap: schedule.isOpen
-        //             ? () => controller.selectSchedule(schedule)
-        //             : null,
-        //         child: Obx(
-        //           () => Container(
-        //             decoration: BoxDecoration(
-        //               borderRadius: 8.borderRadius,
-        //               border: Border.all(
-        //                 color: controller.selectedSchedule.value == schedule
-        //                     ? golden
-        //                     : grey,
-        //               ),
-        //             ),
-        //             child: Center(
-        //               child: Text(schedule.startTime.format(context)),
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   );
-        // }),
-      ],
+        ],
+      ),
     );
   }
 }

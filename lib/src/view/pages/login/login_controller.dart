@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../domain/domain.dart';
+import '../../../shared/shared.dart';
 import '../../view.dart';
 
 final class LoginPageController extends GetxController {
@@ -26,7 +27,7 @@ final class LoginPageController extends GetxController {
 
   /// Retorna `true` quando o login foi concluído.
   Future<bool> authorize() async {
-    if (!formKey.currentState!.validate()) {
+    if (!formKey.currentState!.validateAndScroll()) {
       return false;
     }
 

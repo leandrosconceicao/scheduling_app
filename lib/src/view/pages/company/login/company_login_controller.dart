@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../application/application.dart';
 import '../../../../domain/domain.dart';
+import '../../../../shared/shared.dart';
 
 final class CompanyLoginController extends GetxController with AlertActions {
   final String companyId;
@@ -28,7 +29,7 @@ final class CompanyLoginController extends GetxController with AlertActions {
 
   /// Retorna `true` quando a sessão do proprietário foi iniciada.
   Future<bool> authorize() async {
-    if (!formKey.currentState!.validate()) {
+    if (!formKey.currentState!.validateAndScroll()) {
       return false;
     }
 

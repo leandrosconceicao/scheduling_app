@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ltech_core/ltech_core.dart';
 import 'package:scheduling_app/src/domain/domain.dart';
+import 'package:scheduling_app/src/shared/shared.dart';
 import 'package:scheduling_app/src/view/view.dart';
 
 class _FakeCompanyService extends Fake implements ICompanyService {
@@ -51,8 +52,8 @@ void main() {
   tearDown(Get.reset);
 
   group('handleFormBack', () {
-    test('allows leaving on the first step', () {
-      expect(controller.handleFormBack(), isTrue);
+    test('allows leaving on the first step without selections', () async {
+      expect(await controller.handleFormBack(), isTrue);
     });
 
     test('goes back one step instead of leaving', () {
@@ -85,6 +86,7 @@ void main() {
   group('form route onExit', () {
     Future<GoRouter> pumpOnForm(WidgetTester tester) async {
       final router = GoRouter(
+        navigatorKey: rootNavigatorKey,
         initialLocation: "/c1",
         routes: [
           GoRoute(
@@ -123,6 +125,43 @@ void main() {
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.text("schedule"), findsOneWidget);
+    });
+
+    testWidgets('leaving with selections asks confirmation and keeps data on cancel',
+        (tester) async {
+      await pumpOnForm(tester);
+      controller.selectedType.value = ScheduleType("c1", "Corte", 30, id: "t1");
+      controller.selectedDate.value = DateTime.now();
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.text("Sair do agendamento?"), findsOneWidget);
+
+      await tester.tap(find.text("Continuar"));
+      await tester.pumpAndSettle();
+
+      expect(find.text("form"), findsOneWidget);
+      expect(controller.selectedType.value, isNotNull);
+      expect(controller.selectedDate.value, isNotNull);
+    });
+
+    testWidgets('confirming leave clears the form and closes it', (tester) async {
+      await pumpOnForm(tester);
+      controller.selectedType.value = ScheduleType("c1", "Corte", 30, id: "t1");
+      controller.selectedDate.value = DateTime.now();
+      controller.selectSchedule(_schedule());
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Sair"));
+      await tester.pumpAndSettle();
+
+      expect(find.text("schedule"), findsOneWidget);
+      expect(controller.selectedType.value, isNull);
+      expect(controller.selectedEmployee.value, isNull);
+      expect(controller.selectedSchedule.value, isNull);
+      expect(controller.selectedDate.value, isNull);
+      expect(controller.activeStep.value, 0);
     });
 
     testWidgets('browser back (location change) steps back first', (tester) async {

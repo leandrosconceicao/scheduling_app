@@ -305,6 +305,7 @@ final class SchedulePageController extends GetxController with AlertActions {
     clearSelectedSchedule();
     clearSelectedType();
     clearSelectedEmployee();
+    clearSelectedDate();
     _changePage(0);
   }
 
@@ -345,6 +346,10 @@ final class SchedulePageController extends GetxController with AlertActions {
     selectedEmployee.trigger(null);
   }
 
+  void clearSelectedDate() {
+    selectedDate.trigger(null);
+  }
+
   void selectType(ScheduleType? type) {
     selectedType.trigger(type);
   }
@@ -358,7 +363,7 @@ final class SchedulePageController extends GetxController with AlertActions {
   }
 
   void onNextStep() {
-    if (!scheduleFormKey.currentState!.validate()) {
+    if (!scheduleFormKey.currentState!.validateAndScroll()) {
       return;
     }
     switch (activeStep.value) {
@@ -419,12 +424,12 @@ final class SchedulePageController extends GetxController with AlertActions {
   ///
   /// Retorna `true` quando a tela pode ser fechada; caso contrário, volta uma
   /// etapa. Na confirmação, libera o horário reservado antes de voltar.
-  bool handleFormBack() {
+  FutureOr<bool> handleFormBack() {
     if (processing.value) return false;
 
     switch (activeStep.value) {
       case 0:
-        return true;
+        return _confirmLeaveForm();
       case 3:
         cancelConfirm();
         return false;
@@ -432,6 +437,28 @@ final class SchedulePageController extends GetxController with AlertActions {
         goBack();
         return false;
     }
+  }
+
+  bool get hasFormData =>
+      typeSelected || employeeSelected || scheduleSelected;
+
+  /// Ao sair da tela com dados selecionados, pede confirmação de que serão
+  /// perdidos; se confirmado, limpa o formulário.
+  Future<bool> _confirmLeaveForm() async {
+    if (!hasFormData) return true;
+
+    final discard = await AppAlertDialog.confirmRequest(
+      title: "Sair do agendamento?",
+      message: "Os dados selecionados serão perdidos.",
+      cancelLabel: "Continuar",
+      confirmLabel: "Sair",
+      destructive: true,
+    );
+
+    if (discard != true) return false;
+
+    clearForm();
+    return true;
   }
 
   void selectDate(DateTime date) {

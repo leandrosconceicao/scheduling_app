@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -181,7 +183,7 @@ class AppRouter {
     return state.pathParameters["companyId"] ?? "";
   }
 
-  static bool _canLeaveScheduleForm() {
+  static FutureOr<bool> _canLeaveScheduleForm() {
     if (!Get.isRegistered<SchedulePageController>()) return true;
     return Get.find<SchedulePageController>().handleFormBack();
   }

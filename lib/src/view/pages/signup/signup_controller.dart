@@ -25,7 +25,7 @@ final class SignupController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
   void signup() async {
-    if (!formKey.currentState!.validate()) {
+    if (!formKey.currentState!.validateAndScroll()) {
       return;
     }
 

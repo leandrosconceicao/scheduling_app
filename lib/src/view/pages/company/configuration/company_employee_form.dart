@@ -118,7 +118,7 @@ class _CompanyEmployeeFormState extends State<CompanyEmployeeForm> {
 
     setState(() => _formError = "");
 
-    if (!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validateAndScroll()) {
       _nameFocus.requestFocus();
       return;
     }
