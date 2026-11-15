@@ -47,7 +47,6 @@ app.*.map.json
 .widget_preview/
 dev_config.json
 config.json
-firebase.json
 
 # Configuração e credenciais locais (veja o README)
 google-services.json
@@ -62,4 +61,3 @@ GoogleService-Info.plist
 *service-account*.json
 *firebase-adminsdk*.json
 .firebase/hosting.YnVpbGQvd2Vi.cache
-.firebaserc

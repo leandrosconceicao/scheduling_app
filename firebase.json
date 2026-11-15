@@ -1,0 +1,40 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "leandrotech",
+          "appId": "1:612024335026:android:0f3868836b92c3a935a7ab",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "leandrotech",
+          "configurations": {
+            "android": "1:612024335026:android:0f3868836b92c3a935a7ab",
+            "ios": "1:612024335026:ios:96bf1857f5025c8635a7ab",
+            "macos": "1:612024335026:ios:96bf1857f5025c8635a7ab",
+            "web": "1:612024335026:web:3321150c4d280f4c35a7ab",
+            "windows": "1:612024335026:web:8bb7c19108d00ca035a7ab"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "scheduling-app-d6c11",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
