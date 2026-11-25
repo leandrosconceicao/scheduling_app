@@ -10,3 +10,4 @@ export "utils/picked_image.dart";
 export 'package:ltech_core/ltech_core.dart';
 export "utils/open_link.dart";
 export "utils/form_scroll.dart";
+export "utils/popup_close_watcher.dart";

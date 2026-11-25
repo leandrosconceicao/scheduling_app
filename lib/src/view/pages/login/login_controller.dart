@@ -50,6 +50,26 @@ final class LoginPageController extends GetxController {
     return true;
   }
 
+  /// Retorna `true` quando o login com Google foi concluído.
+  Future<bool> authorizeWithGoogle() async {
+    error.trigger("");
+    loading.toggle();
+
+    final response = await authService.loginWithGoogle();
+
+    loading.toggle();
+
+    if (!response.result) {
+      if (response.description != googleLoginCancelled) {
+        error.trigger(response.description);
+      }
+      return false;
+    }
+
+    clearData();
+    return true;
+  }
+
   @override
   void onClose() {
     email.dispose();

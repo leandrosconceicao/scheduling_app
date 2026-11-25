@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:ltech_core/ltech_core.dart';
 import '../../domain/domain.dart';
+import '../../shared/shared.dart';
 import '../application.dart';
 
 final class AuthService extends GetxController implements IAuthService {
@@ -77,6 +77,47 @@ final class AuthService extends GetxController implements IAuthService {
       return ApiResponse.result(data: userCredencial);
     } catch (e) {
       return ApiResponse.unknow(errorDescription: "Credenciais inválidas");
+    }
+  }
+
+  @override
+  Future<ApiResponse<UserCredential?>> loginWithGoogle() async {
+    final watcher = watchPopupClose();
+    try {
+      final provider = GoogleAuthProvider()
+        ..setCustomParameters({"prompt": "select_account"});
+
+      final signIn = _firebaseAuth.signInWithPopup(provider);
+      // Se o popup foi fechado, o SDK pode demorar a rejeitar a promise.
+      // Ao voltar o foco para a janela, damos um tempo para o login concluir
+      // e, se nada acontecer, tratamos como cancelamento.
+      final cancelled = watcher.refocused
+          .then((_) => Future<void>.delayed(const Duration(seconds: 2)))
+          .then<UserCredential?>((_) => null);
+
+      final credential = await Future.any<UserCredential?>([signIn, cancelled]);
+
+      if (credential == null) {
+        // Evita erro não tratado caso a promise rejeite depois.
+        signIn.ignore();
+        return ApiResponse.unknow(errorDescription: googleLoginCancelled);
+      }
+
+      return ApiResponse.result(data: credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "popup-closed-by-user" ||
+          e.code == "cancelled-popup-request") {
+        return ApiResponse.unknow(errorDescription: googleLoginCancelled);
+      }
+      return ApiResponse.unknow(
+        errorDescription: "Não foi possível entrar com o Google",
+      );
+    } catch (_) {
+      return ApiResponse.unknow(
+        errorDescription: "Não foi possível entrar com o Google",
+      );
+    } finally {
+      watcher.dispose();
     }
   }
 

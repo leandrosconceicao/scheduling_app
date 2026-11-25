@@ -4,15 +4,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../../routes/routes.dart';
 import '../../../shared/shared.dart';
-import 'login_controller.dart';
+import '../../view.dart';
 
 class LoginPage extends GetView<LoginPageController> with FormValidators {
   const LoginPage({super.key});
 
   /// Devolve `true` para quem abriu o login; sem histórico (deep link), segue
   /// para o agendamento.
-  Future<void> _submit(BuildContext context) async {
-    final authorized = await controller.authorize();
+  Future<void> _submit(BuildContext context, {bool google = false}) async {
+    final authorized = google
+        ? await controller.authorizeWithGoogle()
+        : await controller.authorize();
 
     if (!authorized || !context.mounted) return;
 
@@ -96,6 +98,19 @@ class LoginPage extends GetView<LoginPageController> with FormValidators {
                             child: controller.loading.value
                             ? LoadingIcon()
                             : Text("Acessar"),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 48,
+                        width: double.infinity,
+                        child: Obx(
+                          () => OutlinedButton.icon(
+                            onPressed: !controller.loading.value
+                                ? () => _submit(context, google: true)
+                                : null,
+                            icon: Icon(MdiIcons.accountCircleOutline),
+                            label: Text("Continuar com Google"),
                           ),
                         ),
                       ),
