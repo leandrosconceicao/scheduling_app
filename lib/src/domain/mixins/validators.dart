@@ -15,7 +15,10 @@ mixin Validators {
   String? validPhone(String? text) {
     if (!(text?.hasContent ?? false)) return "Obrigatório";
 
-    if (!GetUtils.isPhoneNumber(text!)) {
+    final digits = text!.clearPhone();
+
+    // DDD (2 dígitos) + número (8 ou 9 dígitos)
+    if (digits.length < 10 || digits.length > 11) {
       return "Telefone inválido";
     }
 

@@ -103,7 +103,7 @@ final class SchedulePageController extends GetxController with AlertActions {
       : Client(
           authService.uid,
           authService.userName,
-          authService.phoneNumber,
+          "55${phoneController.text.clearPhone()}",
           email: authService.userEmail,
         );
 
