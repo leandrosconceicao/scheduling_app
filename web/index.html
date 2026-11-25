@@ -31,8 +31,61 @@
 
   <title>scheduling_app</title>
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#131311">
+
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #131311;
+    }
+    #app-loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      background: #131311;
+      z-index: 1;
+      transition: opacity .3s ease;
+    }
+    #app-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #app-loading img {
+      height: 110px;
+      max-width: 80%;
+      object-fit: contain;
+    }
+    #app-loading .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #30302E;
+      border-top-color: #b88c51;
+      border-radius: 50%;
+      animation: app-spin .9s linear infinite;
+    }
+    @keyframes app-spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+  <div id="app-loading">
+    <img src="assets/assets/images/app_logo-dourado.png" alt="Logo">
+    <div class="spinner"></div>
+  </div>
+  <script>
+    window.addEventListener("flutter-first-frame", function () {
+      var loader = document.getElementById("app-loading");
+      if (!loader) return;
+      loader.classList.add("hidden");
+      setTimeout(function () { loader.remove(); }, 400);
+    });
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
