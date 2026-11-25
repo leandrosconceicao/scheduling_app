@@ -292,9 +292,10 @@ final class SchedulePageController extends GetxController with AlertActions {
     initListener();
   }
 
-  Future<void> navigateToLogin() async {
+  Future<bool> navigateToLogin() async {
     final logged = await navigation.requestLogin(companyId);
     if (logged) initListener();
+    return logged;
   }
 
   void logout() {
@@ -384,10 +385,11 @@ final class SchedulePageController extends GetxController with AlertActions {
     }
   }
 
-  void navigateToConfirm() async {
+  Future<void> navigateToConfirm() async {
     if (!isLogged) {
-      navigateToLogin();
-      return;
+      final logged = await navigateToLogin();
+      // Após o login segue direto para o lock e a confirmação
+      if (!logged || !isLogged) return;
     }
 
     final res = await lockSchedule(_selectedSchedule!);
